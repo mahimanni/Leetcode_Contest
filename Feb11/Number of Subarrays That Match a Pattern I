@@ -1,0 +1,86 @@
+/*
+You are given a 0-indexed integer array nums of size n, and a 0-indexed integer array pattern of size m consisting of integers -1, 0, and 1.
+
+A subarray nums[i..j] of size m + 1 is said to match the pattern if the following conditions hold for each element pattern[k]:
+
+nums[i + k + 1] > nums[i + k] if pattern[k] == 1.
+nums[i + k + 1] == nums[i + k] if pattern[k] == 0.
+nums[i + k + 1] < nums[i + k] if pattern[k] == -1.
+Return the count of subarrays in nums that match the pattern.
+
+Example 1:
+Input: nums = [1,2,3,4,5,6], pattern = [1,1]
+Output: 4
+Explanation: The pattern [1,1] indicates that we are looking for strictly increasing subarrays of size 3. In the array nums, the subarrays [1,2,3], [2,3,4], [3,4,5], and [4,5,6] match this pattern.
+Hence, there are 4 subarrays in nums that match the pattern.
+*/
+
+//method-1
+class Solution {
+    public int countMatchingSubarrays(int[] nums, int[] pattern) {
+        int m=pattern.length;
+        int count=0,j;
+        int i=0,flag=0;
+        HashSet<Integer> set=new HashSet<Integer>();
+        while(i<nums.length)
+        {
+            j=i;
+            while(j+m<nums.length && !set.contains(j))
+            {
+                set.add(j);
+                flag=0;
+                for(int k=0;k<m;k++)
+                {
+                  if (pattern[k] == 1 && nums[j + k + 1] > nums[j + k])
+                      flag=0;
+                  else if(pattern[k] == 0 && nums[j + k + 1] == nums[j + k])
+                      flag=0;
+                  else if(pattern[k] == -1 && nums[j + k + 1] < nums[j + k])
+                      flag=0;
+                  else
+                  {    
+                      flag=1;
+                      break;
+                  }   
+                }
+                if(flag==0)
+                    count+=1;
+                j+=m+1;
+                
+            }
+            i+=1;
+        }
+        return count;
+    }
+}
+
+//method-2 more optimized
+class Solution {
+    public int countMatchingSubarrays(int[] nums, int[] pattern) {
+        int m=pattern.length;
+        int count=0,j;
+        int i=0,flag=0;
+        while(i<nums.length-m)
+        {
+                flag=0;
+                for(int k=0;k<m;k++)
+                {
+                  if (pattern[k] == 1 && nums[i + k + 1] > nums[i + k])
+                      flag=0;
+                  else if(pattern[k] == 0 && nums[i + k + 1] == nums[i + k])
+                      flag=0;
+                  else if(pattern[k] == -1 && nums[i + k + 1] < nums[i + k])
+                      flag=0;
+                  else
+                  {    
+                      flag=1;
+                      break;
+                  }   
+                }
+                if(flag==0)
+                    count+=1;
+                i+=1;
+        }
+        return count;
+    }
+}
